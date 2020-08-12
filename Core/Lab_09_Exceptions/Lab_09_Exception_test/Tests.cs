@@ -19,7 +19,7 @@ namespace Lab_09_Exception_test
 		public void WhenAnIllegalPositionIsSpecifiedAnExceptionIsThrown(int pos)
 		{
 			var ex = Assert.Throws<ArgumentException>(() => Program.AddBeatles(pos, "George"));
-			Assert.AreEqual($"The B have a position {pos}", ex.Message, "Exception message not correct");
+			Assert.AreEqual($"The Beatles do not have a position {pos}", ex.Message, "Exception message not correct");
 		}
 
 	}
