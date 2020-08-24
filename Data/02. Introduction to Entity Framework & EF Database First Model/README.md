@@ -10,7 +10,17 @@
 
 # Introduction to Entity Framework
 
-### What is Entity Framework
+Entity Framework is an object-relational mapper (O/RM) that enables .NET developers to work with a database using .NET objects. 
+
+It eliminates the need for most of the data-access code that developers usually need to write.
+
+Entity Framework 6 runs in .NET Framework
+
+“Entity Framework 6 (EF6) is a tried and tested object-relational mapper (O/RM) for .NET with many years of feature development and stabilization”
+
+The newest version, Entity Framework Core, runs in .NET Core
+
+“Entity Framework (EF) Core is a lightweight, extensible, [open source](https://github.com/aspnet/EntityFrameworkCore) and cross-platform version of the popular Entity Framework data access technology.” (https://docs.microsoft.com/en-us/ef/ )
 
 Maps C# objects to relational database tables 
 
@@ -28,97 +38,27 @@ Uses LINQ for queries
 - Can also be used to query other data sources: Collections, JSON, XML etc
 - Unlike SQL strings, get full Visual Studio and debugging support
 
-Entity Framework 6 runs in .NET Framework
+Remember the purpose of Entity Framework is to “enable .NET developers to work with a database using NET objects.”
+NET objects – the classes in C# code
+Database – the tables
+We can either
 
-Entity Framework 6 (EF6) is a tried and tested object-relational mapper (O/RM) for .NET with many years of feature development and stabilization”
+- Start with a database and create classes (the data model) to match it 
+- Start with a data model and generate a database from it
+- Which is best? Depends on whether your database or your object model is the “source of truth”
+  In this session we will use the database first approach.
 
-The newest version, Entity Framework Core, runs in .NET Core
 
-Entity Framework (EF) Core is a lightweight, extensible, [open source](https://github.com/aspnet/EntityFrameworkCore) and cross-platform version of the popular Entity Framework data access technology.”
 
-### Terms : Entity, Model and Class
 
-**Entity**
-
-```
-An `entity` is a database object that we wish to create and use.
-
-Common examples are 
-
-	Customer
-
-	Product
-
-	Order
-
-In a database this would be a standard table.
-```
-
-**Model**
-
-```
-A `model` in the MVC structure also maps to an `entity`
-```
-
-**Class**
-
-```
-In our code we represent `entities` or `models` as classes eg `Customer` class.
-
-If a `class` is related to a database table / entity we call it a `model`
-
-If a `class` is not related to a database table /entity then it's just called a `class`
-```
-
-**Summary :**
-
-Entity
-
-```
-database table
-```
-
-Class
-
-```
-represents a structure in our code
-```
-
-Model
-
-```
-represents a class structure in our code which also maps to an entity in our database
-```
-
-### Types of Entity Framework
-
-Entity Framework has evolved into three related technologies
-
-```
-EF Core
-
-EF6 Database First
-
-EF6 Code First
-```
-
-`EF Core` is a stripped-down version of Entity. It is valid for cross-platform portability so can be used on Windows, Linux and MAC operating systems, as can all `.NET Core` code.
-
-Let's look first at standard Entity which is in version 6 (EF6).
-
-In order to build (`scaffold`) code we do one of the following
-
-```
-Database First
-
-	We use an existing database to build our models (classes) in code and then use them to talk back to the database
-
-Code First
-
-	We build our models (classes) in code and then `scaffold` ie build our database from these models.
-```
 
 ## Setting up EF (Database First)
+
+We will be Reverse Engineering – creating a model from an existing database. This is also known as Scaffolding
+
+- In this session we will reverse engineer the Northwind database.
+- Create a new .NET Core C# Console Application project/solution
+- Open the Northwind database in SQL Server Object Explorer
 
 Create a new project and call it `CodeFromNorthwindModel`. Call the solution `CodeFromNorthwind`
 
@@ -127,6 +67,19 @@ Use the NuGet package manager to add to the project dependencies:
 - `Microsoft.EntityFrameworkCore`
 - `Microsoft.EntityFrameworkCore.SqlServer`
 - `Microsoft.EntityFrameworkCore.Tools`
+
+```
+NOTE: Microsoft.EntityFrameworkCore.Tools allow use to use these commonly used commands:
+
+`Add-Migration`
+`Drop-Database`
+`Get-DbContext`
+`Scaffold-DbContext`
+`Script-Migrations`
+`Update-Database`
+```
+
+
 
 Make a copy of the connection string to the Northwind database:
 
@@ -137,6 +90,10 @@ Open Package Manager Console (`Tools -> Nuget Package Manager -> Package Manager
 `Scaffold-DbContext 'Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=Northwind;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False' Microsoft.EntityFrameworkCore.SqlServer`
 
 By default you will scaffold all the tables. To specify just the Customers and Orders tables, end with "-Tables Customers, Orders".
+
+`Scaffold-Dbcontext` Generates code for a `DbContext` and entity types for a database. In order for `Scaffold-DbContext` to generate an entity type, the database table must have a primary key.
+
+The connection string contains the information that the provider need to know to be able to establish a connection to the database or the data file.
 
 ### Examine the generated code
 
@@ -244,6 +201,37 @@ Overrides two `DbContext` methods:
 - `OnConfiguring` – defines the connection options
 - `OnModelCreating` – defines the database table
 
+Other `DbContext` methods include:
+
+| Method           | Usage                                                        |
+| ---------------- | ------------------------------------------------------------ |
+| Add              | Adds a new entity to `DbContext` with Added state and starts tracking it. This new entity data will be inserted into the database when SaveChanges() is called. |
+| AddAsync         | Asynchronous method for adding a new entity to `DbContext` with Added state and starts tracking it. This new entity data will be inserted into the database when SaveChangesAsync() is called. |
+| AddRange         | Adds a collection of new entities to `DbContext` with Added state and starts tracking it. This new entity data will be inserted into the database when SaveChanges() is called. |
+| AddRangeAsync    | Asynchronous method for adding a collection of new entities which will be saved on SaveChangesAsync(). |
+| Attach           | Attaches a new or existing entity to `DbContext` with Unchanged state and starts tracking it. |
+| AttachRange      | Attaches a collection of new or existing entities to `DbContext` with Unchanged state and starts tracking it. |
+| Entry            | Gets an `EntityEntry` for the given entity. The entry provides access to change tracking information and operations for the entity. |
+| Find             | Finds an entity with the given primary key values.           |
+| FindAsync        | Asynchronous method for finding an entity with the given primary key values. |
+| Remove           | Sets Deleted state to the specified entity which will delete the data when SaveChanges() is called. |
+| RemoveRange      | Sets Deleted state to a collection of entities which will delete the data in a single DB round trip when SaveChanges() is called. |
+| SaveChanges      | Execute INSERT, UPDATE or DELETE command to the database for the entities with Added, Modified or Deleted state. |
+| SaveChangesAsync | Asynchronous method of SaveChanges()                         |
+| Set              | Creates a `DbSet<TEntity>` that can be used to query and save instances of TEntity. |
+| Update           | Attaches disconnected entity with Modified state and start tracking it. The data will be saved when SaveChanges() is called. |
+| UpdateRange      | Attaches a collection of disconnected entities with Modified state and start tracking it. The data will be saved when SaveChagnes() is called. |
+| OnConfiguring    | Override this method to configure the database (and other options) to be used for this context. This method is called for each instance of the context that is created. |
+| OnModelCreating  | Override this method to further configure the model that was discovered by convention from the entity types exposed in `DbSet<TEntity>` properties on your derived context. |
+
+Logically, a `DBContext` maps to a specific database that has a schema that the` DBContext` understands. And on that DBContext class, you can create properties that are type `DbSet<T>`.  Note: The connection string let's our `DBContext` knows which server to go to and which database to query.
+
+![](https://www.entityframeworktutorial.net/images/EF6/dbcontext.png)
+
+
+
+
+
 ### `Dbset` Class
 
 The `DbSet` class represents an entity set that can be used for **create**, **read**, **update**, and **delete** operations.
@@ -301,6 +289,7 @@ We will cover LINQ in more detail in the next lesson, but, for now, let's see wh
 Firstly, create a new project, `Console App (.Net Core)`, called `CodeFromNorthwindBusiness`. Right click the project and ensure it references the `CodeFromNorthwindModel`. Rename the `Program.cs` file to `CRUDManager.cs`. The class in this file should be called `CRUDManager`. The file should look like below (Note the `using` statements):
 
 ```c#
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using CodeFromNorthwindModel;
@@ -409,7 +398,7 @@ Below, we are using a lambda method syntax to delete the customer, Nish Mandal (
 		using (var db = new NorthwindContext())
 		{
 			// select customer
-			var selectedCustomer = db.Customers.Where(c => c.CustomerId == "BLOG").FirstOrDefault();
+			var selectedCustomer = db.Customers.Where(c => c.CustomerId == "MAND").FirstOrDefault();
 
 			// remove customer from local DbContext copy of database
 			db.Customers.Remove(selectedCustomer);
