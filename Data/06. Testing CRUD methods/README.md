@@ -157,26 +157,18 @@ namespace NorthwindTests
 		{
 			using (var db = new NorthwindContext())
 			{
-var numberOfCustomersBefore = db.Customers.ToList().Count();
-				_crudManager.Create("MAND", "Nish Mandal", "Sparta Global");
-				var numberOfCustomersAfter = db.Customers.ToList().Count();
+var selectedCustomer =
+				from c in db.Customers
+				where c.CustomerId == "MAND"
+				select c;
 
-				Assert.AreEqual(numberOfCustomersBefore + 1, numberOfCustomersAfter);
 
-				var createdCustomer =
-					from c in db.Customers
-					where c.CustomerId == "MAND"
-					select c;
-
-				foreach (var c in createdCustomer)
+				foreach (var c in selectedCustomer)
 				{
-					Assert.AreEqual("MAND ", c.CustomerId);
-					Assert.AreEqual("Nish Mandal", c.ContactName);
-					Assert.AreEqual("Sparta Global", c.CompanyName);
-
+					db.Customers.Remove(c);
 				}
 
-				Setup();
+				db.SaveChanges();
 
 			}
 		}
