@@ -7,49 +7,78 @@ using CodeFromNorthwindModel;
 using CodeFromNorthwindBusiness;
 using NUnit.Framework;
 
-public class Tests
+namespace NorthwindTests
 {
-	[SetUp]
+	public class Tests
+	{
+		CRUDManager _crudManager = new CRUDManager();
 
-	public void Setup()
-	{
-		using (var db = new NorthwindContext())
-		{
-			Assert.Pass();
-		}
-	}
+		[SetUp]
 
-	[Test]
-	public void CustomerAddedToDatabaseTest()
-	{
-		using (var db = new NorthwindContext())
+		public void Setup()
 		{
-			Assert.Pass();
-		}
-	}
+			using (var db = new NorthwindContext())
+			{
 
-	public void CustomerAddedTODatabaseCorrectDetails()
-	{
-		using (var db = new NorthwindContext())
-		{
-			Assert.Pass();
-		}
-	}
 
-	[Test]
-	public void UpdateTest()
-	{
-		using (var db = new NorthwindContext())
-		{
-			Assert.Pass();
+			}
 		}
-	}
-	[Test]
-	public void DeleteTest()
-	{
-		using (var db = new NorthwindContext())
+
+
+		[Test]
+		public void CustomerAddedTest()
 		{
-			Assert.Pass();
+			using (var db = new NorthwindContext())
+			{
+
+				Assert.AreEqual("", "1");
+
+			}
+		}
+
+		[Test]
+		public void CustomerAddedDetailsCorrectTest()
+		{
+			using (var db = new NorthwindContext())
+			{
+
+				Assert.AreEqual("", "1");
+
+			}
+		}
+
+
+		[Test]
+		public void UpdateTest()
+		{
+			using (var db = new NorthwindContext())
+			{
+
+				Assert.AreEqual("", "1");
+
+			}
+		}
+
+		[Test]
+		public void UpdateSeveralDetailsTest()
+		{
+			using (var db = new NorthwindContext())
+			{
+				Assert.AreEqual("", "1"); //test the update method which takes 5 parameters
+
+			}
+		}
+
+		[Test]
+		public void RemoveTest()
+		{
+			using (var db = new NorthwindContext())
+			{
+
+				Assert.AreEqual("", "1");
+
+
+			}
 		}
 	}
 }

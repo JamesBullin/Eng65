@@ -27,40 +27,70 @@ using System.Threading;
 using CodeFromNorthwindModel;
 using Microsoft.EntityFrameworkCore;
 
-namespace CRUDManager
+namespace CodeFromNorthwindBusiness
 {
-	public class Program
+	public class CRUDManager
 	{
-		static void Main(string[] args)
-		{
-			Delete("MAND");
-			Create("MAND", "Nish Mandal", "ToysRUs");
-			Update("MAND", "Paris");
-			Delete("MAND");
-		}
+		public Customers SelectedCustomer { get; set; }
 
-		public static void Create(string customerid, string contactname, string companyname)
-		{
 
+		public List<Customers> RetrieveAll()
+		{
 			using (var db = new NorthwindContext())
 			{
-				var newCustomer = new Customers()
-				{
-					CustomerId = customerid.Trim(),
-					ContactName = contactname.Trim(),
-					CompanyName = companyname.Trim()
-				};
-
-				db.Customers.Add(newCustomer);
-
-				db.SaveChanges();
+				return db.Customers.ToList();
 			}
-
-				
 		}
 
-	
-		public static void Update(string customerid, string city)
+
+		static void Main(string[] args)
+		{
+			using (var db = new NorthwindContext())
+			{
+				//Delete("MAND");
+				//Create("MAND", "Nish Mandal", "ToysRUs");
+				//Update("MAND", "Paris");
+				//Delete("MAND");
+
+
+			}
+		}
+			public void Create(string customerid, string contactname, string companyname)
+			{
+
+				using (var db = new NorthwindContext())
+				{
+					var newCustomer = new Customers()
+					{
+						CustomerId = customerid.Trim(),
+						ContactName = contactname.Trim(),
+						CompanyName = companyname.Trim()
+					};
+
+					db.Customers.Add(newCustomer);
+
+					db.SaveChanges();
+				}
+
+
+			}
+
+		public void Update(string customerId, string contactName, string city, string postcode, string country)
+		{
+			using (var db = new NorthwindContext())
+			{
+				SelectedCustomer = db.Customers.Where(c => c.CustomerId == customerId).FirstOrDefault();
+				SelectedCustomer.ContactName = contactName;
+				SelectedCustomer.City = city;
+				SelectedCustomer.PostalCode = postcode;
+				SelectedCustomer.Country = country;
+				// write changes to database
+				db.SaveChanges();
+			}
+		}
+
+
+		public void Update(string customerid, string city)
 			{
 				using (var db = new NorthwindContext())
 				{
@@ -81,16 +111,16 @@ namespace CRUDManager
 
 			}
 
-		public static void  Delete(string customerid)
+			public void Delete(string customerid)
 			{
 
 				using (var db = new NorthwindContext())
 				{
-						var selectedCustomer =
-					from c in db.Customers
-					where c.CustomerId == customerid
-					select c;
-				foreach (var c in selectedCustomer)
+					var selectedCustomer =
+				from c in db.Customers
+				where c.CustomerId == customerid
+				select c;
+					foreach (var c in selectedCustomer)
 					{
 						db.Customers.Remove(c);
 					}
@@ -100,9 +130,6 @@ namespace CRUDManager
 			}
 		}
 	}
-
-
-
 
 ```
 
@@ -118,50 +145,79 @@ using CodeFromNorthwindModel;
 using CodeFromNorthwindBusiness;
 using NUnit.Framework;
 
-public class Tests
+namespace NorthwindTests
 {
-    [SetUp]
+	public class Tests
+	{
+		CRUDManager _crudManager = new CRUDManager();
 
-    public void Setup()
-    {
-        using (var db = new NorthwindContext())
-		{
-			Assert.Pass();
-        }
-    }
+		[SetUp]
 
-	[Test]
-	public void CustomerAddedToDatabaseTest()
-	{
-        using (var db = new NorthwindContext())
+		public void Setup()
 		{
-			Assert.Pass();
-        }
-	}
-    
-    	public void CustomerAddedTODatabaseCorrectDetails()
-	{
-        using (var db = new NorthwindContext())
+			using (var db = new NorthwindContext())
+			{
+
+
+			}
+		}
+
+
+		[Test]
+		public void CustomerAddedTest()
 		{
-			Assert.Pass();
-        }
-	}
-    
-	[Test]
-	public void UpdateTest()
-	{
-		using (var db = new NorthwindContext())
+			using (var db = new NorthwindContext())
+			{
+
+				Assert.AreEqual("","1");
+
+			}
+		}
+
+		[Test]
+		public void CustomerAddedDetailsCorrectTest()
 		{
-			Assert.Pass();
-        }
-	}
-	[Test]
-	public void DeleteTest()
-	{
-		using (var db = new NorthwindContext())
+			using (var db = new NorthwindContext())
+			{
+
+				Assert.AreEqual("","1");
+
+			}
+		}
+
+
+		[Test]
+		public void UpdateTest()
 		{
-			Assert.Pass();
-        }
+			using (var db = new NorthwindContext())
+			{
+
+				Assert.AreEqual("","1");
+
+			}
+		}
+
+		[Test]
+		public void UpdateSeveralDetailsTest()
+		{
+			using (var db = new NorthwindContext())
+			{
+				Assert.AreEqual("","1"); //test the update method which takes 5 parameters
+
+			}
+		}
+
+		[Test]
+		public void RemoveTest()
+		{
+			using (var db = new NorthwindContext())
+			{
+
+				Assert.AreEqual("","1");
+
+
+			}
+		}
 	}
 }
 ```
