@@ -1,26 +1,4 @@
-# Testing CRUD operations
-
-## Prerequisites
-
-1. Complete "Loading & Joining Tables" Lesson
-2. Create a new Testing Project called `CodeFromNorthwindTests` with `.cs` files called `CRUDManagerTests`. Test needs to reference `CodeFromNowrthindModel` and `CodeFromNorthwindBusiness` . Add the following to the following packages to the test project:
-   - `Microsoft.EntityFrameworkCore`
-   - `Microsoft.EntityFrameworkCore.SqlServer`
-   - `Microsoft.EntityFrameworkCore.Tools`
-
-## Contents
-
-1. [Exercise](#exercise)
-2. [Example Tests](#Example-tests)
-
-
-
-## Exercise
-
-Trainees to create CRUD methods and test methods:
-
-```c#
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -42,6 +20,10 @@ namespace CodeFromNorthwindBusiness
 			}
 		}
 
+		public void SetSelectedCustomer(object selectedItem)
+		{
+			SelectedCustomer = (Customers)selectedItem;
+		}
 
 		static void Main(string[] args)
 		{
@@ -131,95 +113,7 @@ namespace CodeFromNorthwindBusiness
 		}
 	}
 
-```
-
-Layout of tests:
-
-```C#
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Microsoft.EntityFrameworkCore;
-using CodeFromNorthwindModel;
-using CodeFromNorthwindBusiness;
-using NUnit.Framework;
-
-namespace NorthwindTests
-{
-	public class Tests
-	{
-		CRUDManager _crudManager = new CRUDManager();
-
-		[SetUp]
-
-		public void Setup()
-		{
-			using (var db = new NorthwindContext())
-			{
 
 
-			}
-		}
-
-
-		[Test]
-		public void CustomerAddedTest()
-		{
-			using (var db = new NorthwindContext())
-			{
-
-				Assert.AreEqual("","1");
-
-			}
-		}
-
-		[Test]
-		public void CustomerAddedDetailsCorrectTest()
-		{
-			using (var db = new NorthwindContext())
-			{
-
-				Assert.AreEqual("","1");
-
-			}
-		}
-
-
-		[Test]
-		public void UpdateTest()
-		{
-			using (var db = new NorthwindContext())
-			{
-
-				Assert.AreEqual("","1");
-
-			}
-		}
-
-		[Test]
-		public void UpdateSeveralDetailsTest()
-		{
-			using (var db = new NorthwindContext())
-			{
-				Assert.AreEqual("","1"); //test the update method which takes 5 parameters
-
-			}
-		}
-
-		[Test]
-		public void RemoveTest()
-		{
-			using (var db = new NorthwindContext())
-			{
-
-				Assert.AreEqual("","1");
-
-
-			}
-		}
-	}
-}
-```
 
 
