@@ -157,7 +157,26 @@ namespace NorthwindTests
 		{
 			using (var db = new NorthwindContext())
 			{
+var numberOfCustomersBefore = db.Customers.ToList().Count();
+				_crudManager.Create("MAND", "Nish Mandal", "Sparta Global");
+				var numberOfCustomersAfter = db.Customers.ToList().Count();
 
+				Assert.AreEqual(numberOfCustomersBefore + 1, numberOfCustomersAfter);
+
+				var createdCustomer =
+					from c in db.Customers
+					where c.CustomerId == "MAND"
+					select c;
+
+				foreach (var c in createdCustomer)
+				{
+					Assert.AreEqual("MAND ", c.CustomerId);
+					Assert.AreEqual("Nish Mandal", c.ContactName);
+					Assert.AreEqual("Sparta Global", c.CompanyName);
+
+				}
+
+				Setup();
 
 			}
 		}
@@ -192,7 +211,29 @@ namespace NorthwindTests
 			using (var db = new NorthwindContext())
 			{
 
-				Assert.AreEqual("","1");
+				var newCustomer = new Customers()
+				{
+					CustomerId = "MAND",
+					ContactName = "Nish Mandal",
+					CompanyName = "Sparta Global",
+				};
+
+				db.Customers.Add(newCustomer);
+
+				db.SaveChanges();
+
+				_crudManager.Update("MAND", "Paris");
+
+				var updatedCustomer =
+							from c in db.Customers
+							where c.CustomerId == "MAND"
+							select c;
+
+				foreach (var c in updatedCustomer)
+				{
+					Assert.AreEqual("Paris", c.City);
+				}				
+				Setup();
 
 			}
 		}
