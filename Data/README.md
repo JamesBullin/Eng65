@@ -7,7 +7,7 @@
 5. Loading & Joining Tables
 6. Testing CRUD methods
 7. EF - Code First Database
-8. WPF Layer
+8. Three Tier Application
 9. XML & JSON
-10. Encoding
-11. Streaming & Serialisation
+10. Encoding & Streaming
+11. Serialisation
